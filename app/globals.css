@@ -1,35 +1,338 @@
 @import "tailwindcss";
 
-/* 色はここにまとめる */
+/*
+ * Craft Desk デザインシステム（https://claude.ai/artifact/1M9gmwEHai3aAqCWnMqoZE）のトークンとクラス。
+ * 値は tokens.json / components/bundle.css と同じにしている。
+ */
 @theme {
-  /* 黒・黄・青紫・白の4色 */
-  --color-ink: #121212;
-  --color-panel: #1c1c1f;
-  --color-line: #34343c;
-  --color-text: #f4f2ea;
-  --color-muted: #b3b0a6;
-  --color-accent: #f5d62a;
-  --color-violet: #5b5fb0;
-  --color-violet-soft: #a4a8f0;
-  --color-ok: #a4a8f0;
-  --color-warn: #f5d62a;
+  --color-mat-500: #2a7d46;
+  --color-mat-700: #1c5a31;
+  --color-mat-line: #4f9d68;
+  --color-paper-100: #fcf8ec;
+  --color-paper-200: #f1e8cf;
+  --color-kraft-300: #e3cfa3;
+  --color-ink-900: #1d1d1b;
+  --color-ink-600: #4d4a42;
+  --color-sticky-400: #f6d55c;
+  --color-crayon-red: #bf3628;
+  --color-crayon-orange: #ee8a2a;
+  --color-pencil-blue: #2b5ca6;
+  --color-star-400: #f7c948;
 
-  --font-serif: var(--font-noto-serif-jp), "Hiragino Mincho ProN", Georgia, serif;
-  --font-display: var(--font-fraunces), var(--font-noto-serif-jp), Georgia, serif;
+  --font-display: var(--font-patrick-hand), var(--font-klee-one), cursive;
+  --font-body: var(--font-zen-maru), "Hiragino Maru Gothic ProN", system-ui, sans-serif;
+  --font-jphand: var(--font-klee-one), var(--font-zen-maru), cursive;
+}
+
+:root {
+  /* bundle.css が参照する名前（tokens.css 相当） */
+  --mat-500: var(--color-mat-500);
+  --mat-700: var(--color-mat-700);
+  --mat-line: var(--color-mat-line);
+  --paper-100: var(--color-paper-100);
+  --paper-200: var(--color-paper-200);
+  --kraft-300: var(--color-kraft-300);
+  --ink-900: var(--color-ink-900);
+  --ink-600: var(--color-ink-600);
+  --sticky-400: var(--color-sticky-400);
+  --tape-200: rgba(246, 232, 176, 0.82);
+  --crayon-red: var(--color-crayon-red);
+  --crayon-orange: var(--color-crayon-orange);
+  --pencil-blue: var(--color-pencil-blue);
+  --star-400: var(--color-star-400);
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --grid-cell: 32px;
+
+  --radius-xs: 3px;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-pill: 999px;
+
+  --shadow-sticker: 3px 3px 0 #1d1d1b;
+  --shadow-sticker-hover: 5px 5px 0 #1d1d1b;
+  --shadow-tape: 0 1px 2px rgba(0, 0, 0, 0.18);
+
+  --stroke-ink: 2.5px;
+  --stroke-thin: 1.5px;
+
+  --tilt-sm: 1.5deg;
+  --tilt-md: 3deg;
+  --tilt-tape: 8deg;
 }
 
 html {
-  background: var(--color-ink);
-  color-scheme: dark;
+  background: var(--mat-500);
+  overflow-x: clip;
 }
 
 body {
-  background: var(--color-ink);
-  color: var(--color-text);
-  font-family: var(--font-serif);
+  font-family: var(--font-body);
+  overflow-x: clip; /* テープや星がはみ出しても横スクロールを出さない */
 }
 
-::selection {
-  background: var(--color-accent);
-  color: var(--color-ink);
+/* デザインシステムのクラスは components レイヤーに入れ、Tailwind のユーティリティで位置や大きさを上書きできるようにする */
+@layer components {
+/* ---- Mat ---- */
+.cd-mat {
+  background-color: var(--mat-500);
+  color: var(--paper-100);
+  background-image:
+    linear-gradient(var(--mat-700) 2px, transparent 2px),
+    linear-gradient(90deg, var(--mat-700) 2px, transparent 2px),
+    linear-gradient(var(--mat-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--mat-line) 1px, transparent 1px);
+  background-size:
+    calc(var(--grid-cell) * 5) calc(var(--grid-cell) * 5),
+    calc(var(--grid-cell) * 5) calc(var(--grid-cell) * 5),
+    var(--grid-cell) var(--grid-cell),
+    var(--grid-cell) var(--grid-cell);
+}
+
+/* ---- TornPaper（clip-path が box-shadow を切るので、影は外側の .cd-lift で付ける） ---- */
+.cd-lift {
+  filter: drop-shadow(0 10px 12px rgba(10, 40, 20, 0.35));
+}
+.cd-paper {
+  position: relative;
+  background: var(--paper-100);
+  color: var(--ink-900);
+  padding: calc(var(--space-6) + 6px) var(--space-6);
+  font-family: var(--font-body);
+  clip-path: polygon(0.0% 3px, 2.5% 3px, 5.0% 2px, 7.5% 5px, 10.0% 0px, 12.5% 0px, 15.0% 7px, 17.5% 0px, 20.0% 3px, 22.5% 7px, 25.0% 0px, 27.5% 7px, 30.0% 2px, 32.5% 0px, 35.0% 0px, 37.5% 5px, 40.0% 5px, 42.5% 0px, 45.0% 2px, 47.5% 0px, 50.0% 7px, 52.5% 5px, 55.0% 0px, 57.5% 7px, 60.0% 0px, 62.5% 2px, 65.0% 7px, 67.5% 0px, 70.0% 7px, 72.5% 7px, 75.0% 5px, 77.5% 0px, 80.0% 2px, 82.5% 0px, 85.0% 7px, 87.5% 2px, 90.0% 3px, 92.5% 5px, 95.0% 2px, 97.5% 7px, 100.0% 3px, 100.0% calc(100% - 3px), 97.5% calc(100% - 0px), 95.0% calc(100% - 7px), 92.5% calc(100% - 3px), 90.0% calc(100% - 5px), 87.5% calc(100% - 3px), 85.0% calc(100% - 5px), 82.5% calc(100% - 7px), 80.0% calc(100% - 3px), 77.5% calc(100% - 7px), 75.0% calc(100% - 0px), 72.5% calc(100% - 2px), 70.0% calc(100% - 2px), 67.5% calc(100% - 2px), 65.0% calc(100% - 3px), 62.5% calc(100% - 3px), 60.0% calc(100% - 5px), 57.5% calc(100% - 7px), 55.0% calc(100% - 5px), 52.5% calc(100% - 3px), 50.0% calc(100% - 5px), 47.5% calc(100% - 7px), 45.0% calc(100% - 5px), 42.5% calc(100% - 2px), 40.0% calc(100% - 7px), 37.5% calc(100% - 0px), 35.0% calc(100% - 7px), 32.5% calc(100% - 0px), 30.0% calc(100% - 7px), 27.5% calc(100% - 0px), 25.0% calc(100% - 3px), 22.5% calc(100% - 2px), 20.0% calc(100% - 7px), 17.5% calc(100% - 7px), 15.0% calc(100% - 0px), 12.5% calc(100% - 2px), 10.0% calc(100% - 7px), 7.5% calc(100% - 3px), 5.0% calc(100% - 7px), 2.5% calc(100% - 0px), 0.0% calc(100% - 3px));
+}
+.cd-paper--kraft {
+  background: var(--kraft-300);
+}
+
+/* ---- WashiTape ---- */
+.cd-tape {
+  position: absolute;
+  z-index: 2;
+  width: 112px;
+  height: 30px;
+  background: var(--tape-200);
+  box-shadow: var(--shadow-tape);
+  transform: rotate(calc(var(--tilt-tape) * -1));
+  clip-path: polygon(0px 0.0%, 4px 16.7%, 0px 33.3%, 4px 50.0%, 0px 66.7%, 4px 83.3%, 0px 100.0%, calc(100% - 0px) 100.0%, calc(100% - 4px) 83.3%, calc(100% - 0px) 66.7%, calc(100% - 4px) 50.0%, calc(100% - 0px) 33.3%, calc(100% - 4px) 16.7%, calc(100% - 0px) 0.0%);
+}
+.cd-tape--right {
+  transform: rotate(var(--tilt-tape));
+}
+
+/* ---- StickyNote ---- */
+.cd-sticky {
+  position: relative;
+  display: inline-block;
+  background: var(--sticky-400);
+  color: var(--ink-900);
+  border: var(--stroke-ink) solid var(--ink-900);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sticker);
+  padding: var(--space-4) var(--space-4) var(--space-6);
+  font-family: var(--font-jphand);
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 26px;
+  transform: rotate(calc(var(--tilt-md) * -1));
+}
+
+/* ---- Label ---- */
+.cd-label {
+  display: inline-block;
+  background: var(--sticky-400);
+  color: var(--ink-900);
+  border: var(--stroke-ink) solid var(--ink-900);
+  border-radius: var(--radius-xs);
+  padding: 2px var(--space-3);
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 20px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transform: rotate(calc(var(--tilt-sm) * -1));
+}
+.cd-label--paper {
+  background: var(--paper-100);
+}
+.cd-label--orange {
+  background: var(--crayon-orange);
+}
+
+/* ---- TechChip ---- */
+.cd-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.cd-chip {
+  display: inline-block;
+  background: var(--paper-100);
+  color: var(--ink-900);
+  border: var(--stroke-thin) solid var(--ink-900);
+  border-radius: var(--radius-xs);
+  padding: 2px var(--space-2);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 18px;
+  transform: rotate(var(--tilt-sm));
+}
+.cd-chip:nth-child(2n) {
+  transform: rotate(calc(var(--tilt-sm) * -1));
+  background: var(--paper-200);
+}
+
+/* ---- Button ---- */
+.cd-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  cursor: pointer;
+  text-decoration: none;
+  background: var(--pencil-blue);
+  color: var(--paper-100);
+  border: var(--stroke-ink) solid var(--ink-900);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sticker);
+  padding: 6px var(--space-4);
+  font-family: var(--font-display);
+  font-size: 19px;
+  line-height: 24px;
+  letter-spacing: 0.03em;
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+.cd-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-sticker-hover);
+}
+.cd-btn:active {
+  transform: translate(3px, 3px);
+  box-shadow: none;
+}
+.cd-btn:focus-visible {
+  outline: 3px dashed var(--ink-900);
+  outline-offset: 4px;
+}
+.cd-btn--paper {
+  background: var(--paper-100);
+  color: var(--ink-900);
+}
+.cd-btn--sticky {
+  background: var(--sticky-400);
+  color: var(--ink-900);
+}
+
+/* ---- Doodles ---- */
+.cd-stamp {
+  display: inline-block;
+  background: var(--crayon-red);
+  color: var(--paper-100);
+  border: var(--stroke-ink) solid var(--ink-900);
+  border-radius: var(--radius-xs);
+  padding: 1px var(--space-2);
+  font-family: var(--font-display);
+  font-size: 16px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transform: rotate(calc(var(--tilt-md) * -1));
+}
+.cd-num {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  background: var(--crayon-orange);
+  color: var(--ink-900);
+  border: var(--stroke-ink) solid var(--ink-900);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-sticker);
+  font-family: var(--font-display);
+  font-size: 22px;
+}
+.cd-doodle {
+  display: inline-block;
+  vertical-align: middle;
+}
+.cd-doodle .fill-star {
+  fill: var(--star-400);
+}
+.cd-doodle .ink {
+  stroke: var(--ink-900);
+  stroke-width: var(--stroke-ink);
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.cd-doodle .clip {
+  stroke: var(--crayon-red);
+  stroke-width: 3;
+  fill: none;
+  stroke-linecap: round;
+}
+
+/* ---- ProjectCard ---- */
+.cd-project {
+  position: relative;
+}
+.cd-project .cd-paper {
+  display: grid;
+  gap: var(--space-4);
+}
+.cd-project__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-4);
+  align-items: center;
+}
+.cd-project__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 34px;
+}
+.cd-project__body {
+  margin: 0;
+  font-size: 16px;
+  line-height: 28px;
+  color: var(--ink-900);
+  max-width: 60ch;
+}
+.cd-project__note {
+  margin: 0;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--ink-600);
+}
+.cd-project__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  padding-top: var(--space-2);
+}
+.cd-project .cd-tape {
+  top: -8px;
+  left: 28px;
+}
+.cd-project .cd-tape--right {
+  left: auto;
+  right: 28px;
+}
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cd-btn {
+    transition: none;
+  }
 }

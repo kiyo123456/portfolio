@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Star } from "@/components/Doodles";
 import { HostingTable } from "@/components/HostingTable";
 import { LinkButton } from "@/components/LinkButton";
 import { SecurityTable } from "@/components/SecurityTable";
-import { TechTag } from "@/components/TechTag";
+import { TechChips } from "@/components/TechChips";
 import { getProject, projects } from "@/data/projects";
 
 // 詳細ページを持つプロジェクトだけを、ビルドのときに作る。それ以外の slug は 404 にする
@@ -28,57 +28,78 @@ export default async function ProjectDetailPage({ params }: PageProps<"/project/
   const { detail } = project;
 
   return (
-    <main>
-      <Link href="/project" className="text-sm text-muted hover:text-accent">
-        ← Projects
-      </Link>
+    <div className="mx-auto max-w-[820px] px-4 pb-12 sm:px-8">
+      <nav className="py-6">
+        <LinkButton href="/project" variant="paper" arrow={false}>
+          ← Projects
+        </LinkButton>
+      </nav>
 
-      <header className="mt-8 border-b border-line pb-10">
-        <h1 className="font-display text-4xl sm:text-5xl">{project.title}</h1>
-        <p className="mt-3 text-text/90">{project.tagline}</p>
-        <ul className="mt-5 flex flex-wrap gap-2" aria-label="使った技術">
-          {project.tech.map((t) => (
-            <TechTag key={t} name={t} />
-          ))}
-        </ul>
-        <p className="mt-6 text-sm leading-7 text-muted">{detail.lead}</p>
-        <div className="mt-6 flex flex-wrap gap-3">
-          {project.links.map((l) => (
-            <LinkButton key={l.href} href={l.href}>
-              {l.label}
-            </LinkButton>
-          ))}
+      {/* 見出しの紙 */}
+      <header className="relative mt-6 mb-14">
+        <span className="absolute -top-8 -right-2 z-[3] hidden sm:block">
+          <Star size={52} />
+        </span>
+        <div className="cd-lift relative">
+          <span className="cd-tape -top-3.5 left-6" />
+          <span className="cd-tape cd-tape--right -top-3.5 right-6" />
+          <div className="cd-paper grid gap-4 px-6 pt-10 pb-8 sm:px-10">
+            <div className="flex flex-wrap items-center gap-3">
+              <h1 className="m-0 font-display text-[52px] leading-none font-normal sm:text-[72px]">{project.title}</h1>
+              {project.badge && <span className="cd-label cd-label--paper">{project.badge}</span>}
+            </div>
+            <p className="m-0 text-lg font-bold">{project.tagline}</p>
+            <TechChips items={project.tech} />
+            <p className="m-0 max-w-[60ch] leading-7">{detail.lead}</p>
+            <div className="cd-project__actions">
+              {project.links.map((l) => (
+                <LinkButton key={l.href} href={l.href} variant="primary">
+                  {l.label}
+                </LinkButton>
+              ))}
+            </div>
+          </div>
         </div>
       </header>
 
-      {detail.sections.map((s) => (
-        <section key={s.heading} className="border-b border-line py-10">
-          <h2 className="font-display text-xl text-accent sm:text-2xl">{s.heading}</h2>
-          {s.body?.map((b, i) => (
-            <p key={i} className="mt-4 text-sm leading-7 text-text/85">
-              {b}
-            </p>
-          ))}
-          {s.points && (
-            <ol className="mt-5 space-y-4">
-              {s.points.map((pt) => (
-                <li key={pt.title} className="border-l-2 border-line pl-4">
-                  <p className="font-semibold text-text">{pt.title}</p>
-                  <p className="mt-1 text-sm leading-7 text-muted">{pt.text}</p>
-                </li>
+      {/* セクションごとに紙を1枚。長い文章は紙の上だけに置く */}
+      <div className="grid gap-12">
+        {detail.sections.map((s, i) => (
+          <section key={s.heading} className="cd-lift relative">
+            <span className={`cd-tape -top-3 ${i % 2 === 0 ? "left-8" : "cd-tape--right right-8"}`} />
+            <div className="cd-paper grid gap-4 px-6 sm:px-10">
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="cd-num">{String(i + 1).padStart(2, "0")}</span>
+                <span className={`cd-label ${i % 2 === 0 ? "" : "cd-label--orange"}`}>{s.label}</span>
+                <h2 className="m-0 w-full font-display text-[28px] leading-9 font-normal sm:w-auto">{s.heading}</h2>
+              </div>
+              {s.body?.map((b, j) => (
+                <p key={j} className="m-0 max-w-[60ch] leading-7">
+                  {b}
+                </p>
               ))}
-            </ol>
-          )}
-          {s.table === "security" && detail.security && <SecurityTable rows={detail.security} />}
-          {s.table === "hosting" && detail.hosting && <HostingTable rows={detail.hosting} />}
-        </section>
-      ))}
+              {s.points && (
+                <ol className="m-0 grid list-none gap-3 p-0">
+                  {s.points.map((pt) => (
+                    <li key={pt.title} className="rounded-[3px] border-[1.5px] border-ink-900 bg-paper-200 px-4 py-3">
+                      <p className="m-0 font-bold">{pt.title}</p>
+                      <p className="m-0 mt-1 text-[15px] leading-6 text-ink-600">{pt.text}</p>
+                    </li>
+                  ))}
+                </ol>
+              )}
+              {s.table === "security" && detail.security && <SecurityTable rows={detail.security} />}
+              {s.table === "hosting" && detail.hosting && <HostingTable rows={detail.hosting} />}
+            </div>
+          </section>
+        ))}
+      </div>
 
-      <p className="pt-10">
-        <Link href="/project" className="text-sm text-muted hover:text-accent">
-          ← Projects に戻る
-        </Link>
+      <p className="mt-14 text-center">
+        <LinkButton href="/project" variant="sticky" arrow={false}>
+          ← Back to Projects
+        </LinkButton>
       </p>
-    </main>
+    </div>
   );
 }

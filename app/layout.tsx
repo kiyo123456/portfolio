@@ -1,17 +1,26 @@
 import type { Metadata } from "next";
-import { Fraunces, Noto_Serif_JP } from "next/font/google";
+import { Klee_One, Patrick_Hand, Zen_Maru_Gothic } from "next/font/google";
 import "./globals.css";
 
-const notoSerifJP = Noto_Serif_JP({
-  variable: "--font-noto-serif-jp",
-  weight: ["400", "600"],
+// Craft Desk の3書体：display = Patrick Hand、body = Zen Maru Gothic、jphand = Klee One
+const patrickHand = Patrick_Hand({
+  variable: "--font-patrick-hand",
+  weight: "400",
+  subsets: ["latin"],
+});
+
+const zenMaru = Zen_Maru_Gothic({
+  variable: "--font-zen-maru",
+  weight: ["400", "700"],
   subsets: ["latin"],
   preload: false,
 });
 
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+const kleeOne = Klee_One({
+  variable: "--font-klee-one",
+  weight: ["400", "600"],
   subsets: ["latin"],
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -30,10 +39,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="ja" className={`${notoSerifJP.variable} ${fraunces.variable} antialiased`}>
-      <body className="min-h-dvh">
-        <div className="mx-auto w-full max-w-3xl px-4 py-12 sm:px-6 sm:py-20">{children}</div>
-      </body>
+    <html lang="ja" className={`${patrickHand.variable} ${zenMaru.variable} ${kleeOne.variable} antialiased`}>
+      <body className="cd-mat min-h-dvh">{children}</body>
     </html>
   );
 }

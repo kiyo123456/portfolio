@@ -3,29 +3,25 @@ import Link from "next/link";
 type Props = {
   href: string;
   children: React.ReactNode;
-  primary?: boolean;
+  variant?: "primary" | "paper" | "sticky";
+  arrow?: boolean;
 };
 
-export function LinkButton({ href, children, primary }: Props) {
-  const external = href.startsWith("http");
-  const className = `inline-flex items-center gap-1 rounded-full border px-4 py-1.5 text-sm transition-colors ${
-    primary
-      ? "border-accent bg-accent text-ink hover:bg-transparent hover:text-accent"
-      : "border-line text-text hover:border-accent hover:text-accent"
-  }`;
+// Craft Desk の Button（ステッカー風）。1枚の紙に primary は1つまで
+export function LinkButton({ href, children, variant = "paper", arrow = true }: Props) {
+  const className = `cd-btn${variant === "primary" ? "" : ` cd-btn--${variant}`}`;
 
-  if (external) {
+  if (href.startsWith("http")) {
     return (
       <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
-        {children}
-        <span aria-hidden>↗</span>
+        {children} <span aria-hidden>↗</span>
       </a>
     );
   }
   return (
     <Link href={href} className={className}>
       {children}
-      <span aria-hidden>→</span>
+      {arrow && <span aria-hidden>→</span>}
     </Link>
   );
 }

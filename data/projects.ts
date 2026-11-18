@@ -17,6 +17,7 @@ export type SecurityCheck = {
 
 // 詳細ページの1セクション
 export type DetailSection = {
+  label: string; // 英語の見出しラベル（Craft Desk のルール：ラベルは英語）
   heading: string;
   body?: string[];
   points?: { title: string; text: string }[];
@@ -35,6 +36,8 @@ export type Project = {
   tagline: string;
   badge?: string;
   period?: string;
+  note?: string; // 付箋に書くひとこと
+  context?: string; // 注記（どこで・誰と）
   tech: string[];
   summary: string[];
   links: Link[];
@@ -53,16 +56,19 @@ export const projects: Project[] = [
     tagline: "自分のアプリの安全性を説明できるようになるために作った、小さな SNS",
     badge: "Security Study",
     period: "2026",
+    note: "IPA の基準で\n6項目を点検した",
+    context: "開発中のサービス TETOMI のための検証用アプリ。",
     tech: ["Next.js 16", "React 19", "TypeScript", "Supabase", "Tailwind CSS", "Vercel"],
     summary: [
       "ログイン・画像と文章の投稿・いいねができる掲示板アプリ。開発中のサービス TETOMI を安全に広げるための、検証用として作りました。",
       "IPA「安全なウェブサイトの作り方」を基準にアプリを点検し、Supabase や React が守ってくれる部分と、自分で設定しないと守れない部分を分けて整理しました。",
     ],
-    links: [{ label: "GitHub", href: "https://github.com/kiyo123456/mini-board" }],
+    links: [{ label: "View on GitHub", href: "https://github.com/kiyo123456/mini-board" }],
     detail: {
       lead: "TETOMI を現場のエンジニアに見てもらったとき、セキュリティについての質問にひとつも答えられませんでした。実際のユーザーがいる TETOMI で試すのは危ないので、小さなアプリを作って、仕組みを理解するところから始めました。",
       sections: [
         {
+          label: "What",
           heading: "作ったもの",
           points: [
             { title: "ログイン", text: "Supabase Auth のメールとパスワードでログインする" },
@@ -71,6 +77,7 @@ export const projects: Project[] = [
           ],
         },
         {
+          label: "Why",
           heading: "きっかけ",
           body: [
             "開発中の TETOMI を現場のエンジニアに見てもらったとき、次の3つを聞かれました。",
@@ -82,6 +89,7 @@ export const projects: Project[] = [
           ],
         },
         {
+          label: "Goal",
           heading: "目的",
           body: [
             "AI で誰でもアプリを作れるようになった一方で、使う人の警戒心は高まっています。学生が作ったアプリを使ってもらうには、「安全です」と根拠を持って説明できる必要があります。",
@@ -89,6 +97,7 @@ export const projects: Project[] = [
           ],
         },
         {
+          label: "Stack",
           heading: "技術選定",
           body: [
             "判断の基準は「一人で、短い期間で、お金をかけずに、ちゃんと動く安全なものを公開できる」ことです。",
@@ -97,6 +106,7 @@ export const projects: Project[] = [
           table: "hosting",
         },
         {
+          label: "Method",
           heading: "点検の方法",
           points: [
             { title: "基準を決める", text: "IPA（情報処理推進機構）「安全なウェブサイトの作り方 改訂第7版」を基準にする" },
@@ -105,6 +115,7 @@ export const projects: Project[] = [
           ],
         },
         {
+          label: "Result",
           heading: "点検の結果",
           body: [
             "Supabase・React・Next.js が守ってくれる部分と、自分で設定しないと守れない部分が混ざっていました。下の2つの「未対応」は、点検で見つけた穴です。",
@@ -112,6 +123,7 @@ export const projects: Project[] = [
           table: "security",
         },
         {
+          label: "Gaps",
           heading: "見つけた穴：Supabase・React では塞がらないもの",
           points: [
             {
@@ -125,12 +137,14 @@ export const projects: Project[] = [
           ],
         },
         {
+          label: "UX",
           heading: "ほかに工夫したこと",
           body: [
             "いいねを押してから表示が変わるまでに約2秒かかっていました。React の useOptimistic を使い、サーバーの返事を待たずに押した瞬間に表示を切り替えるようにしました。",
           ],
         },
         {
+          label: "Learned",
           heading: "学び",
           body: [
             "Supabase は守るための仕組みを用意しているだけで、自動で守ってくれるわけではありません。RLS のポリシーを書くのも、どの仕組みをどの場面で使うかを決めるのも自分です。",
@@ -138,6 +152,7 @@ export const projects: Project[] = [
           ],
         },
         {
+          label: "Next",
           heading: "これから",
           points: [
             { title: "見つけた穴を塞ぐ", text: "SVG のアップロードを拒否し、セキュリティヘッダーを付ける" },
@@ -169,14 +184,16 @@ export const projects: Project[] = [
     tagline: "同じ大学の学生どうしで、教科書を手渡しで譲り合うサービス",
     badge: "Live",
     period: "2026 –",
+    note: "大学メールで\n本人確認",
+    context: "企画はチーム、開発はほぼ一人で担当。",
     tech: ["Next.js", "TypeScript", "Supabase", "Stripe", "Vitest", "Vercel"],
     summary: [
       "教科書や資格教材は高く、使い終わったものを必要な後輩に渡す場がありません。TETOMI は、同じ大学の学生だけが使える教科書の P2P 取引サービスです。大学のメールアドレスで本人確認をし、学外の人は登録できません。送料・手数料はゼロです。",
-      "まずは1つの学部から始め、他の学部や関東の大学にも広げることを目指しています。企画はチームで行い、開発はほぼ一人で担当しました。出品・検索・購入希望・ISBN のバーコード読み取り・Stripe による決済などを実装しています。",
+      "まずは1つの学部から始め、他の学部や関東の大学にも広げることを目指しています。出品・検索・購入希望・ISBN のバーコード読み取り・Stripe による決済などを実装しています。",
     ],
     links: [
-      { label: "サイトを見る", href: "https://tetomi.jp" },
-      { label: "GitHub", href: "https://github.com/tetomi-official/fortetomi.jp" },
+      { label: "Visit Site", href: "https://tetomi.jp" },
+      { label: "View on GitHub", href: "https://github.com/tetomi-official/fortetomi.jp" },
     ],
   },
 ];
