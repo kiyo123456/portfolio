@@ -1,26 +1,32 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* 色はここにまとめる。ダーク基調・アクセントは琥珀色1つ */
+@theme {
+  --color-ink: #0b0b0e;
+  --color-panel: #131318;
+  --color-line: #2a2a33;
+  --color-text: #e7e5e0;
+  --color-muted: #9b988f;
+  --color-accent: #f2b45c;
+  --color-ok: #7fc8a0;
+  --color-warn: #f08a6c;
+
+  --font-serif: var(--font-noto-serif-jp), "Hiragino Mincho ProN", Georgia, serif;
+  --font-display: var(--font-fraunces), var(--font-noto-serif-jp), Georgia, serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: var(--color-ink);
+  color-scheme: dark;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-ink);
+  color: var(--color-text);
+  font-family: var(--font-serif);
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-ink);
 }
