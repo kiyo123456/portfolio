@@ -8,7 +8,7 @@ export function ProjectItem({ project }: { project: Project }) {
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <h2 className="font-display text-2xl text-text sm:text-3xl">{project.title}</h2>
         {project.badge && (
-          <span className="rounded-full border border-accent/50 px-2 py-0.5 text-xs text-accent">
+          <span className="rounded-full bg-violet px-2 py-0.5 text-xs text-text">
             {project.badge}
           </span>
         )}

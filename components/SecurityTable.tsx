@@ -13,7 +13,7 @@ export function SecurityTable({ rows }: { rows: SecurityCheck[] }) {
           <p className="sm:text-right">
             <span
               className={`inline-block whitespace-nowrap rounded-full border px-2 py-0.5 text-xs ${
-                r.status === "done" ? "border-ok/50 text-ok" : "border-warn/60 text-warn"
+                r.status === "done" ? "border-violet text-ok" : "border-warn bg-warn font-semibold text-ink"
               }`}
             >
               {r.status === "done" ? "対応済み" : "未対応（これから対応）"}
